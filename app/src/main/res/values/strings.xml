@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Charadas</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_game_mode">GameModeActivity</string>
 </resources>
