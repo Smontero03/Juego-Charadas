@@ -5,6 +5,7 @@ import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,10 +30,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.charadas.ui.theme.CharadasTheme
 
 
@@ -43,7 +46,7 @@ class GameModeActivity : ComponentActivity() {
         setContent {
             CharadasTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
+                GameModeMenu(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -54,16 +57,18 @@ class GameModeActivity : ComponentActivity() {
 fun GameModeMenu(modifier: Modifier){
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(16.dp),
+        .background(Brush.verticalGradient( colors = listOf(Color(0xFF6DBDF2), Color(0xFF1565C0))))
+        .padding(start = 16.dp, end = 16.dp, bottom =160 .dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text("Seleccione la categoria", modifier = Modifier.padding(top = 32.dp, bottom = 50.dp),
-            color=Color.Black
+        Text("Seleccione la categoria", modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
+            color=Color.Black,fontSize = 30.sp
+
         )
 
         CategoryGrid(onCategorySelected = {})
         Spacer(modifier= Modifier.weight(1f))
-
+        StartButton(onClick = {})
 
     }
 
@@ -78,7 +83,7 @@ fun CategoryItem(name: String,onClick:()-> Unit){
             .aspectRatio(1f)
             .fillMaxWidth()
             .clickable(onClick=onClick)
-            .border(2.dp, color = Color.Cyan,shape),
+            .border(2.dp, color = Color(0xff775cd6),shape),
         shape=shape,
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -126,12 +131,13 @@ fun StartButton(onClick: () -> Unit){
             .height(56.dp),
         shape=RoundedCornerShape(50),
         colors= ButtonDefaults.buttonColors(
-            contentColor = Color.Black, containerColor = Color.Gray
+            contentColor = Color.Black, containerColor = Color(0xff775cd6)
 
         )
 
+
     ){
-        Text("Empezar")
+        Text("Iniciar", modifier = Modifier , fontSize = 20.sp)
 
     }
 
@@ -143,11 +149,13 @@ fun StartButton(onClick: () -> Unit){
 fun GameModeMenuPreview() {
     Column(modifier = Modifier
         .fillMaxSize()
+        .background(Brush.verticalGradient( colors = listOf(Color(0xFF6DBDF2), Color(0xFF1565C0))))
         .padding(start = 16.dp, end = 16.dp, bottom =160 .dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text("Seleccione la categoria", modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
-            color=Color.Black
+            color=Color.Black,fontSize = 30.sp
+
         )
 
         CategoryGrid(onCategorySelected = {})
