@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+<uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Charadas">
         <activity
+            android:name=".RotateActivity"
+            android:exported="false"
+            android:label="@string/title_activity_rotate"
+            android:theme="@style/Theme.Charadas" />
+        <activity
             android:name=".GameModeActivity"
             android:exported="false"
             android:label="@string/title_activity_game_mode"
@@ -21,6 +26,7 @@
             android:exported="true"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Charadas">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

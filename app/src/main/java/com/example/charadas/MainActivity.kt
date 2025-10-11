@@ -34,7 +34,8 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         modifier = Modifier.fillMaxSize()
                     ) { innerPadding ->
-                        Inicio(modifier = Modifier.padding(innerPadding))
+                       // Inicio(modifier = Modifier.padding(innerPadding))
+                        RotationScreen(modifier = Modifier.padding(innerPadding))
                     }
 
                 }
