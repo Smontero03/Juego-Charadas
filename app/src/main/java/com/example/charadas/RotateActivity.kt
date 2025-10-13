@@ -1,5 +1,7 @@
 package com.example.charadas
 
+import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.ImageDecoder
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +11,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -33,29 +37,52 @@ import kotlinx.coroutines.sync.Mutex
 class RotateActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        val categoria=intent.getStringExtra("Categoria")
+        val orientation = resources.configuration.orientation
+
+        if(orientation== Configuration.ORIENTATION_LANDSCAPE){
+            val intent= Intent(this,GameActivity::class.java)
+            intent.putExtra("categoria",categoria)
+            startActivity(intent)
+            finish()
+            return
+
+        }
+
         setContent {
             CharadasTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                RotationScreen(modifier = Modifier.padding(innerPadding))
+                RotationScreen(modifier = Modifier.padding(innerPadding), categoria = categoria)
                 }
             }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val categoria=intent.getStringExtra("categoria")
+        if (newConfig.orientation== Configuration.ORIENTATION_LANDSCAPE){
+            val intent = Intent(this, GameActivity::class.java)
+            intent.putExtra("categoria",categoria)
+            startActivity(intent)
+            finish()
+
         }
     }
 }
 
 @Composable
-fun RotationScreen(modifier: Modifier){
+fun RotationScreen(modifier: Modifier,categoria: String?){
     val context= LocalContext.current
     Column(modifier.fillMaxSize().background(Brush.verticalGradient( colors = listOf(Color(0xFF6DBDF2), Color(0xFF1565C0)))),
     verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text("Gire su dispositivo para iniciar")
+
         AsyncImage(
             model = ImageRequest.Builder(context)
-                .data("https://media.giphy.com/media/Ju7l5y9osyymQ/giphy.gif")
+                .data(R.drawable.icono_girar)
                 .decoderFactory(
                     if (android.os.Build.VERSION.SDK_INT>=28)
                         ImageDecoderDecoder.Factory()
@@ -66,6 +93,8 @@ fun RotationScreen(modifier: Modifier){
             contentDescription = "Gif de rotacion",
             modifier= Modifier.size(200.dp)
         )
+        Spacer(modifier=Modifier.height(50.dp))
+        Text("Gire su dispositivo para iniciar")
     }
 
 
@@ -75,6 +104,6 @@ fun RotationScreen(modifier: Modifier){
 @Composable
 fun GreetingPreview2() {
     CharadasTheme {
-        RotationScreen(modifier = Modifier)
+        //RotationScreen(modifier = Modifier)
     }
 }

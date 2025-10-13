@@ -1,7 +1,9 @@
 package com.example.charadas
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,6 +30,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -37,16 +43,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.charadas.ui.theme.CharadasTheme
+import kotlinx.coroutines.CoroutineStart
 
 
 class GameModeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Guarda el contexto de la Activity
+        val context = this
+
         setContent {
             CharadasTheme {
+                var selectedCategory by remember { mutableStateOf<String?>(null) }
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                GameModeMenu(modifier = Modifier.padding(innerPadding))
+                    GameModeMenu(
+                        modifier = Modifier.padding(innerPadding),
+                        onCategorySelected = { selectedCategory = it },
+                        onStartClick = {
+                            // Evitamos que la app se cierre si no hay categoría seleccionada
+                            if (selectedCategory != null) {
+                                val intent = Intent(context, RotateActivity::class.java)
+                                intent.putExtra("categoria", selectedCategory)
+                                context.startActivity(intent)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Por favor selecciona una categoría primero",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -54,25 +84,40 @@ class GameModeActivity : ComponentActivity() {
 }
 
 @Composable
-fun GameModeMenu(modifier: Modifier){
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(Brush.verticalGradient( colors = listOf(Color(0xFF6DBDF2), Color(0xFF1565C0))))
-        .padding(start = 16.dp, end = 16.dp, bottom =160 .dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Text("Seleccione la categoria", modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
-            color=Color.Black,fontSize = 30.sp
+fun GameModeMenu(
+    modifier: Modifier,
+    onCategorySelected: (String) -> Unit,
+    onStartClick: () -> Unit
+) {
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFF6DBDF2), Color(0xFF1565C0))
+                )
+            )
+            .padding(start = 16.dp, end = 16.dp, bottom = 160.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            "Seleccione la categoria",
+            modifier = Modifier.padding(top = 60.dp, bottom = 100.dp),
+            color = Color.Black,
+            fontSize = 30.sp
         )
 
-        CategoryGrid(onCategorySelected = {})
-        Spacer(modifier= Modifier.weight(1f))
-        StartButton(onClick = {})
+        CategoryGrid(onCategorySelected = {
+            selectedCategory = it
+            onCategorySelected(it)
+        })
 
+        Spacer(modifier = Modifier.weight(1f))
+
+        StartButton(onClick = onStartClick)
     }
-
-
 }
 @Composable
 fun CategoryItem(name: String,onClick:()-> Unit){

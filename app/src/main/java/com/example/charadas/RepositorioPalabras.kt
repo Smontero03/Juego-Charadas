@@ -22,7 +22,7 @@ object RepositorioPalabras {
         "Alemania", "China", "India", "Perú", "Australia"
     )
 
-    val categoryNames = listOf("Animales", "Películas", "Artistas Musicales", "Países")
+    val categoryNames = listOf("Animales", "Peliculas", "ArtistasMusicales", "Paises")
 
     fun ObtenerPalabra(categoria: String):List<String>{
         return when(categoria){
