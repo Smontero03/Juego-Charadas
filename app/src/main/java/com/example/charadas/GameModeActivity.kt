@@ -46,42 +46,7 @@ import com.example.charadas.ui.theme.CharadasTheme
 import kotlinx.coroutines.CoroutineStart
 
 
-class GameModeActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
-        // Guarda el contexto de la Activity
-        val context = this
-
-        setContent {
-            CharadasTheme {
-                var selectedCategory by remember { mutableStateOf<String?>(null) }
-
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    GameModeMenu(
-                        modifier = Modifier.padding(innerPadding),
-                        onCategorySelected = { selectedCategory = it },
-                        onStartClick = {
-                            // Evitamos que la app se cierre si no hay categoría seleccionada
-                            if (selectedCategory != null) {
-                                val intent = Intent(context, RotateActivity::class.java)
-                                intent.putExtra("categoria", selectedCategory)
-                                context.startActivity(intent)
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Por favor selecciona una categoría primero",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun GameModeMenu(

@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -98,7 +99,7 @@ fun AppNavigator(modifier: Modifier) {
             )
         }
 
-        // ✅ Aquí se corrige la ruta
+
         composable(
             route = "rotation/{categoria}",
             arguments = listOf(navArgument("categoria") { type = NavType.StringType })
@@ -106,9 +107,19 @@ fun AppNavigator(modifier: Modifier) {
             val categoria = backStackEntry.arguments?.getString("categoria")
             RotationScreen(
                 modifier = Modifier.fillMaxSize(),
-                categoria = categoria
+                categoria = categoria,
+                navController= navController
             )
         }
+
+        composable(
+            route = "game/{categoria}",
+            arguments = listOf(navArgument("categoria") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val categoria = backStackEntry.arguments?.getString("categoria")?:"Desconocido"
+            Gameplay(modifier= Modifier.fillMaxSize(),categoria=categoria,navController= navController)
+        }
+
     }
 }
 
