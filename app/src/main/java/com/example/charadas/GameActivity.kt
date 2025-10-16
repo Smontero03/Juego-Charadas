@@ -60,7 +60,10 @@ fun Gameplay(modifier: Modifier,
 ){  var palabra by remember { mutableStateOf("") }
     var showPauseMenu by remember { mutableStateOf(false) }
     var tiempoRestante by remember { mutableStateOf(60) }
-    var aciertos by remember { mutableStateOf(0) }
+    var equipoActual by remember { mutableStateOf(1) } // 1 o 2
+    var aciertosEquipo1 by remember { mutableStateOf(0) }
+    var aciertosEquipo2 by remember { mutableStateOf(0) }
+    var rondasCompletadas by remember { mutableStateOf(0) }
     val listaPalabras = remember { RepositorioPalabras.ObtenerPalabra(categoria).toMutableList() }
     val context = LocalContext.current
 
@@ -87,16 +90,20 @@ fun Gameplay(modifier: Modifier,
                         val nueva = listaPalabras.random()
                         palabra = nueva
                         // Aumentar aciertos
-                        aciertos++
+                        if (equipoActual == 1) {
+                            aciertosEquipo1++
+                        } else {
+                            aciertosEquipo2++
+                        }
                         // Pequeña pausa para evitar múltiples detecciones seguidas
-                        delay(2000)
+                        delay(5000)
                     }
                     // Cuando el dispositivo se inclina hacia abajo cambia de palabra
                 }else if(x < -2f){
                     scope.launch {
                         val nueva = listaPalabras.random()
                         palabra = nueva
-                        delay(2000)
+                        delay(5000)
                     }
 
                 }
@@ -112,14 +119,29 @@ fun Gameplay(modifier: Modifier,
         }
     }
 
-    LaunchedEffect(tiempoRestante,showPauseMenu) {
-        if(!showPauseMenu && tiempoRestante>0){
+    LaunchedEffect(tiempoRestante, showPauseMenu) {
+        if (!showPauseMenu && tiempoRestante > 0) {
             delay(1000L)
             tiempoRestante--
         }
-        if (tiempoRestante==0){
-            Toast.makeText(context,"TIEMPO TERMINADO", Toast.LENGTH_SHORT).show()
 
+        if (tiempoRestante == 0) {
+            val mensaje = "¡Tiempo terminado para el equipo $equipoActual!"
+            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
+
+            rondasCompletadas++
+
+            if (rondasCompletadas == 2) {
+
+                navController.navigate("resultados/$aciertosEquipo1/$aciertosEquipo2") {
+                    popUpTo("menu") { inclusive = false }
+                }
+            } else {
+
+                equipoActual = if (equipoActual == 1) 2 else 1
+                tiempoRestante = 60
+                palabra = listaPalabras.random()
+            }
         }
     }
 
@@ -169,14 +191,14 @@ fun Gameplay(modifier: Modifier,
                     // Reiniciar el juego (reiniciar contador, palabra, etc.)
                     showPauseMenu = false
                     tiempoRestante = 60
-                    aciertos = 0
+                    //aciertos = 0
                     palabra = listaPalabras.random()
                 }) {
                     Text("Reiniciar")
                 }
                 Spacer(Modifier.height(8.dp))
                 Button(onClick = {
-                    // Aquí podrías volver al menú principal
+                    //  Vuelve al menú principal
                     navController.navigate("menu") {
                         popUpTo("game/$categoria") { inclusive = true }
                     }

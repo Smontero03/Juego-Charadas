@@ -4,4 +4,5 @@
     <string name="title_activity_game_mode">GameModeActivity</string>
     <string name="title_activity_rotate">RotateActivity</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="title_activity_results">ResultsActivity</string>
 </resources>

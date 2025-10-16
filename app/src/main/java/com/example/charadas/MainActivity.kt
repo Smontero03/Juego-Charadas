@@ -63,7 +63,7 @@ fun Inicio(modifier: Modifier,onPlayClick:()-> Unit){
         .padding(top = 150.dp), fontSize = 40.sp, color = Color(0xFFFFFFFF))
         Spacer(modifier= Modifier.height(325.dp))
 
-        Button(onClick = onPlayClick,modifier= Modifier.align(Alignment.CenterHorizontally).height(80.dp).width(250.dp), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff8879f7), contentColor = Color.White)) {
+        Button(onClick = onPlayClick,modifier= Modifier.align(Alignment.CenterHorizontally).height(60.dp).width(250.dp), colors = ButtonDefaults.buttonColors(containerColor = Color(0xff8879f7), contentColor = Color.White)) {
             Text("Jugar", fontSize = 30.sp)
         }
 
@@ -78,6 +78,7 @@ fun AppNavigator(modifier: Modifier) {
 
     NavHost(navController = navController, startDestination = "Inicio") {
 
+        //  Pantalla de inicio
         composable("Inicio") {
             Inicio(
                 modifier = Modifier.fillMaxSize(),
@@ -85,6 +86,7 @@ fun AppNavigator(modifier: Modifier) {
             )
         }
 
+        //  Menú principal
         composable("menu") {
             GameModeMenu(
                 modifier = Modifier.fillMaxSize(),
@@ -99,7 +101,7 @@ fun AppNavigator(modifier: Modifier) {
             )
         }
 
-
+        // Pantalla de rotación
         composable(
             route = "rotation/{categoria}",
             arguments = listOf(navArgument("categoria") { type = NavType.StringType })
@@ -108,23 +110,45 @@ fun AppNavigator(modifier: Modifier) {
             RotationScreen(
                 modifier = Modifier.fillMaxSize(),
                 categoria = categoria,
-                navController= navController
+                navController = navController
             )
         }
 
+        //  Pantalla de juego
         composable(
             route = "game/{categoria}",
             arguments = listOf(navArgument("categoria") { type = NavType.StringType })
         ) { backStackEntry ->
-            val categoria = backStackEntry.arguments?.getString("categoria")?:"Desconocido"
-            Gameplay(modifier= Modifier.fillMaxSize(),categoria=categoria,navController= navController)
+            val categoria = backStackEntry.arguments?.getString("categoria") ?: "Desconocido"
+            Gameplay(
+                modifier = Modifier.fillMaxSize(),
+                categoria = categoria,
+                navController = navController
+            )
         }
 
+        // pantalla de resultados
+        composable(
+            route = "resultados/{puntos1}/{puntos2}",
+            arguments = listOf(
+                navArgument("puntos1") { type = NavType.IntType },
+                navArgument("puntos2") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val puntos1 = backStackEntry.arguments?.getInt("puntos1") ?: 0
+            val puntos2 = backStackEntry.arguments?.getInt("puntos2") ?: 0
+
+            ResultsScreen(
+                aciertosEquipo1 = puntos1,
+                aciertosEquipo2 = puntos2,
+                onVolverMenu = {
+                    navController.navigate("menu") {
+                        // Evita duplicar pantallas en la pila
+                        popUpTo("Inicio") { inclusive = false }
+                    }
+                }
+            )
+        }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    //Inicio(modifier = Modifier)
-}

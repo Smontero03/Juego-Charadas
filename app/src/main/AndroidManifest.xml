@@ -14,16 +14,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Charadas">
         <activity
+            android:name=".ResultsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_results"
+            android:theme="@style/Theme.Charadas" />
+        <activity
             android:name=".GameActivity"
             android:exported="false"
             android:label="@string/title_activity_game"
             android:theme="@style/Theme.Charadas" />
         <activity
             android:name=".RotateActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="false"
             android:label="@string/title_activity_rotate"
-            android:configChanges="orientation|screenSize"
-
             android:theme="@style/Theme.Charadas" />
         <activity
             android:name=".GameModeActivity"
